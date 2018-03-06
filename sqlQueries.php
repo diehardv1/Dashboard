@@ -40,10 +40,10 @@ function irflow($query) {
             TRUNCATE(TIME_TO_SEC(TIMEDIFF(updated_at, created_at))/3600,0) AS close_hours,
             TRUNCATE(TIME_TO_SEC(TIMEDIFF(updated_at, created_at))/86400,2) AS close_days,
         	alert_num as id, concat('https://mbitsecirflow01.multicare.org/#/triage/', (alert_num), '/edit') as link, 
-        	case when source = 'ESM alarm'THEN name
+        	case when source = 'ESM alarm'THEN name_dup
         		when source = 'Email Alert' THEN emailSubject
         		WHEN source = 'SecureWorks Ticket' THEN swSymptomDescription
-        		ELSE description END as description
+        		ELSE description_dup END as description
             from alerts_with_facts
             WHERE created_at >= '$beginDate'
             order by created_at_date
