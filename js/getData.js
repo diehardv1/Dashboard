@@ -1,6 +1,39 @@
 
 function initGraphs(rawData){
+	var options = {
+	    scales: {
+		      xAxes: [{
+		        time: {
+		          unit: 'month'
+		        },
+		        gridLines: {
+		          display: false
+		        },
+		        ticks: {
+		          maxTicksLimit: 6
+		        }
+		      }],
+		      yAxes: [{
+		        ticks: {
+		          beginAtZero:true
+		        },
+		        scaleLabel: {
+		        	display: true,
+		        	labelString: 'Count',
+		        	fondSize: 20
+		        },
+		        gridLines: {
+		          display: true
+		        }
+		      }],
+	    },
+	    legend: {
+	      display: true,
+	      position: 'bottom'
+	    }
+	};
 	
+	//console.log(options);
 	// Incidents/Alerts Opened
 	var sortField = "created_at";
 	var sortType = "date";
@@ -13,7 +46,7 @@ function initGraphs(rawData){
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
-	var mychartdata = barChart(labellist, chartdata);
+	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowOpen");
 	var myLineChart = new Chart(ctx, mychartdata);
 	
@@ -29,11 +62,43 @@ function initGraphs(rawData){
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
-	var mychartdata = barChart(labellist, chartdata);
+	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowClose");
 	var myLineChart = new Chart(ctx, mychartdata);
 	
 	// Average Time to Close
+	var options2 = {
+		    scales: {
+			      xAxes: [{
+			        time: {
+			          unit: 'month'
+			        },
+			        gridLines: {
+			          display: false
+			        },
+			        ticks: {
+			          maxTicksLimit: 6
+			        }
+			      }],
+			      yAxes: [{
+			        ticks: {
+			          beginAtZero:true
+			        },
+			        scaleLabel: {
+			        	display: true,
+			        	labelString: 'Days',
+			        	fondSize: 20
+			        },
+			        gridLines: {
+			          display: true
+			        }
+			      }],
+		    },
+		    legend: {
+		      display: true,
+		      position: 'bottom'
+		    }
+		};
 	var sortField = "closed_at";
 	var sortType = "date";
 	var seriesField = "type";
@@ -45,7 +110,7 @@ function initGraphs(rawData){
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
-	var mychartdata = barChart(labellist, chartdata);
+	var mychartdata = barChart(labellist, chartdata, options2);
 	var ctx = document.getElementById("irflowCloseAvg");
 	var myLineChart = new Chart(ctx, mychartdata);
 	
@@ -61,7 +126,7 @@ function initGraphs(rawData){
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
-	var mychartdata = barChart(labellist, chartdata);
+	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowPriority");
 	var myLineChart = new Chart(ctx, mychartdata);
 
@@ -77,7 +142,7 @@ function initGraphs(rawData){
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
-	var mychartdata = barChart(labellist, chartdata);
+	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowType");
 	var myLineChart = new Chart(ctx, mychartdata);
 	

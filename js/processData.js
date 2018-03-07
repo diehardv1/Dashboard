@@ -188,7 +188,7 @@ function toggleHide(divID, textDivID, onText, offText) {
     };
 };
 
-function barChart(labellist, chartdata) {
+function barChart(labellist, chartdata, options) {
 	var barcolors = ["rgba(114,147,203,1)", "rgba(225,151,76,1)", "rgba(132,186,91,1)", "rgba(211,94,96,1)", "rgba(128,133,133,1)", "rgba(144,103,167,1)", 
 		"rgba(171,104,87,1)", "rgba(204,194,16,1)", "rgba(0,73,73,1)", "rgba(204,194,16,1)", "rgba(0,146,146,1)", "rgba(255,255,109,1)", "rgba(0,0,128,1)", "rgba(0,255,255,1)"]
 	//var ctx = document.getElementById("myBarChart");
@@ -212,38 +212,46 @@ function barChart(labellist, chartdata) {
 			  labels: labellist,
 			  datasets: data,
 		  },
-		  options: {
-		    scales: {
-		      xAxes: [{
-		        time: {
-		          unit: 'month'
-		        },
-		        gridLines: {
-		          display: false
-		        },
-		        ticks: {
-		          maxTicksLimit: 6
-		        }
-		      }],
-		      yAxes: [{
-		        ticks: {
-		          beginAtZero:true
-		        },
-		        scaleLabel: {
-		        	display: true,
-		        	labelString: 'Count',
-		        	fondSize: 20
-		        },
-		        gridLines: {
-		          display: true
-		        }
-		      }],
-		    },
-		    legend: {
-		      display: true,
-		      position: 'bottom'
-		    }
-		}
+		  options: options
+	};
+	//console.log(mychartdata);
+	//var myLineChart = new Chart(ctx, mychartdata);
+	return mychartdata;
+};
+
+function lineChart(labellist, chartdata, options) {
+	var barcolors = ["rgba(114,147,203,1)", "rgba(225,151,76,1)", "rgba(132,186,91,1)", "rgba(211,94,96,1)", "rgba(128,133,133,1)", "rgba(144,103,167,1)", 
+		"rgba(171,104,87,1)", "rgba(204,194,16,1)", "rgba(0,73,73,1)", "rgba(204,194,16,1)", "rgba(0,146,146,1)", "rgba(255,255,109,1)", "rgba(0,0,128,1)", "rgba(0,255,255,1)"]
+	//var ctx = document.getElementById("myBarChart");
+	var data = [];
+		
+	for (var i in chartdata) {
+		data.push(
+			{
+			      label: chartdata[i].name,
+			      backgroundColor: barcolors[i],
+			      borderColor: barcolors[i],
+			      pointRadius: 5,
+			      pointBackgroundColor: "rgba(2,117,216,1)",
+			      pointBorderColor: "rgba(255,255,255,0.8)",
+			      pointHoverRadius: 5,
+			      pointHoverBackgroundColor: "rgba(2,117,216,1)",
+			      pointHitRadius: 20,
+			      pointBorderWidth: 2,
+			      fill: false,
+			      data: chartdata[i].values
+			}		
+		);
+	};
+	//console.log(data);
+	
+	var mychartdata = {
+		 type: 'line',
+		  data: {
+			  labels: labellist,
+			  datasets: data,
+		  },
+		  options: options
 	};
 	//console.log(mychartdata);
 	//var myLineChart = new Chart(ctx, mychartdata);
