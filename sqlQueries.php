@@ -13,6 +13,12 @@ function irflow($query) {
     
     if ($queryName == 'irflowGraphs' ) {
         $beginDate = $query->beginDate;
+        if (isset($query->endDate)) {
+            $endDate = $query->endDate;
+        } else {
+            $endDate = date("Y-m-d H:i:s");
+        }
+        
         $sql = "
             select 'Incident' as type, concat_WS('/',incident_typename, incident_subtypename) as incident_type,  incident_status, incident_stage, incident_priority, created_at, closed_at,
             DATE(created_at) as created_at_date,
@@ -26,7 +32,8 @@ function irflow($query) {
         	incident_num as id, concat('https://mbitsecirflow01.multicare.org/#/incidents/', incident_num, '/summary') as link,
         	incident_description as description
             from incidents_with_facts
-            WHERE created_at >= '$beginDate'
+            WHERE (created_at >= '$beginDate' and created_at <= '$endDate') or
+            (closed_at >= '$beginDate' and closed_at <= '$endDate')
             
             UNION
             
@@ -45,7 +52,8 @@ function irflow($query) {
         		WHEN source = 'SecureWorks Ticket' THEN swSymptomDescription
         		ELSE description_dup END as description
             from alerts_with_facts
-            WHERE created_at >= '$beginDate'
+            WHERE (created_at >= '$beginDate' and created_at <= '$endDate') or
+            (updated_at >= '$beginDate' and updated_at <= '$endDate')
             order by created_at_date
         ";
     };

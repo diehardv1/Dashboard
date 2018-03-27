@@ -1,6 +1,22 @@
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
+function getData(queryData, runFunction, url){
+	$.ajax({
+		url: url,
+		method: "POST",
+		data: {"query": JSON.stringify(queryData)},
+		success: function(data) {
+			//console.log(data);
+			//initGraphs(data);
+			eval(runFunction);
+		},
+		error: function(data) {
+			console.log(data);
+		}
+	});
+};
+
 function buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType){
 	var found = false;
 	var seriesdata = [];
@@ -112,7 +128,8 @@ function sortData(arr, sort_field, sortType){
 		arr.sort(propComparator(sort_field));*/
 	
 	if (sortType == "date"){
-		[].slice.call(arr).sort(function(a, b) {
+		//[].slice.call(arr).sort(function(a, b) {
+		arr.sort(function(a, b) {
 			  var nameA = new Date(a[sort_field]);
 			  var nameB = new Date(b[sort_field]);
 			  if (nameA < nameB) {
@@ -125,11 +142,11 @@ function sortData(arr, sort_field, sortType){
 			  // names must be equal
 			  return 0;
 			});
-			return arr;
 			//console.log("Sorted", arr);
+			return arr;
 	}
 	else if (sortType == "string"){
-		[].slice.call(arr).sort(function(a, b) {
+		arr.sort(function(a, b) {
 			  var nameA = a[sort_field].toUpperCase();
 			  var nameB = b[sort_field].toUpperCase();
 			  if (nameA < nameB) {
@@ -146,7 +163,7 @@ function sortData(arr, sort_field, sortType){
 			//console.log("Sorted", arr);
 	}
 	else {
-		[].slice.call(arr).sort(function(a, b) {
+		arr.sort(function(a, b) {
 			  var nameA = a[sort_field];
 			  var nameB = b[sort_field];
 			  if (nameA < nameB) {
@@ -167,7 +184,7 @@ function sortData(arr, sort_field, sortType){
 
 function filterData(arr, filter){
 	
-	var arrayFiltered = [].slice.call(arr).filter(function(a) {
+	var arrayFiltered = arr.filter(function(a) {
 		  if (eval(filter)) {
 		    return true;
 		  }

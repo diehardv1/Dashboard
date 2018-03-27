@@ -7,9 +7,9 @@ include 'sqlQueries.php';
 
 function mysqlQuery($sql, $server, $user, $mystring, $database) {
     
-    $encode_str = file_get_contents('data/mbitsecirflow01.txt');
+    //$encode_str = file_get_contents('data/mbitsecirflow01.txt');
 
-    $mystring = base64_decode($encode_str);
+    //$mystring = base64_decode($encode_str);
     
     $db = new mysqli($server, $user, $mystring, $database);
     
@@ -40,6 +40,32 @@ function mysqlQuery($sql, $server, $user, $mystring, $database) {
     //print_r ($data);
     print json_encode($data, JSON_PRETTY_PRINT);
 };
+
+function mssqlQuery($sql, $server, $user, $mystring, $database) {
+    $host = 'mmcdb2,64154';
+    $user = 'epodbprod';
+    $pass = 'J$ns8M38hw5';
+    $db_name = 'WRDB';
+    
+    $connectionOptions = array( "Database" => $database, "Uid" => $user, "PWD" => $mystring );
+    //Establishes the connection
+    $conn = sqlsrv_connect($server, $connectionOptions) or die(FormatErrors(sqlsrv_errors()));
+    //Select Query
+    $tsql= 'select * from [dbo].[csr_dim_status]';
+    //Executes the query
+    $result= sqlsrv_query($conn, $tsql);
+    
+    // Execute a query
+    //$query = 'select * from [dbo].[csr_dim_status]';
+    
+    // Iterate over results<br />
+    while($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    print json_encode($data, JSON_PRETTY_PRINT);
+    
+    sqlsrv_free_stmt($result);
+}
 
 if (isset($_POST["query"])) {
 

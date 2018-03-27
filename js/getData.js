@@ -1,5 +1,43 @@
+//var start = moment().subtract(29, 'days');
+var start = moment('2017-12-01');
+var end = moment();
+var openedChart;
 
-function initGraphs(rawData){
+function cb(start, end) {
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    window.start = start;
+    window.end = end;
+    //alert("start: " + start + " end: " + end)
+    var queryData = {"beginDate": start, "endDate": end, "queryName": "irflowGraphs", "system": "irflow"};
+	var runFunction = "initGraphs(data, 'update')";
+	var url = "/Reports/getData.php";
+	getData(queryData, runFunction, url);
+};
+
+function initDatePicker() {
+	$('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'Last 90 Days': [moment().subtract(89, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, 
+    function(start, end, label) {
+    	cb(start, end);
+    });
+
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    //cb(start, end);
+};
+
+function initGraphs(rawData, stage){
+
 	var options = {
 	    scales: {
 		      xAxes: [{
@@ -41,14 +79,17 @@ function initGraphs(rawData){
 	var labelsField = "created_at_month";
 	var valueField = "";
 	var calculation = "sum";
-	var filter = "a.created_at >= '2017-12-01'";
+	var filter = "a.created_at >= '" + start.format("YYYY-MM-DD h:mm:ss") + "'  && " + "a.created_at <= '" + end.format("YYYY-MM-DD h:mm:ss") + "'";
 	
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowOpen");
-	var myLineChart = new Chart(ctx, mychartdata);
+	if (stage == "update") {
+		openedChart.destroy();
+	};
+	openedChart = new Chart(ctx, mychartdata);
 	
 	// Incidents/Alerts Closed
 	var sortField = "closed_at";
@@ -57,14 +98,17 @@ function initGraphs(rawData){
 	var labelsField = "closed_at_month";
 	var valueField = "";
 	var calculation = "sum";
-	var filter = "a.incident_status == 'Closed' && a.closed_at >= '2017-12-01'";
+	var filter = "a.incident_status == 'Closed' && a.closed_at >= '" + start.format("YYYY-MM-DD h:mm:ss") + "'  && " + "a.closed_at <= '" + end.format("YYYY-MM-DD h:mm:ss") + "'";
 	
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowClose");
-	var myLineChart = new Chart(ctx, mychartdata);
+	if (stage == "update") {
+		closedChart.destroy();
+	};
+	closedChart = new Chart(ctx, mychartdata);
 	
 	// Average Time to Close
 	var options2 = {
@@ -105,14 +149,17 @@ function initGraphs(rawData){
 	var labelsField = "closed_at_month";
 	var valueField = "close_days";
 	var calculation = "average";
-	var filter = "a.incident_status == 'Closed' && a.closed_at >= '2017-12-01'";
+	var filter = "a.incident_status == 'Closed' && a.closed_at >= '" + start.format("YYYY-MM-DD h:mm:ss") + "'  && " + "a.closed_at <= '" + end.format("YYYY-MM-DD h:mm:ss") + "'";
 	
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options2);
 	var ctx = document.getElementById("irflowCloseAvg");
-	var myLineChart = new Chart(ctx, mychartdata);
+	if (stage == "update") {
+		avgcloseChart.destroy();
+	};
+	avgcloseChart = new Chart(ctx, mychartdata);
 	
 	// Incidents by Priority
 	var sortField = "created_at";
@@ -121,14 +168,17 @@ function initGraphs(rawData){
 	var labelsField = "created_at_month";
 	var valueField = "";
 	var calculation = "sum";
-	var filter = "a.type == 'Incident' && a.created_at >= '2017-12-01'";
+	var filter = "a.type == 'Incident' && a.created_at >= '" + start.format("YYYY-MM-DD h:mm:ss") + "'  && " + "a.created_at <= '" + end.format("YYYY-MM-DD h:mm:ss") + "'";
 
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowPriority");
-	var myLineChart = new Chart(ctx, mychartdata);
+	if (stage == "update") {
+		priorityChart.destroy();
+	};
+	priorityChart = new Chart(ctx, mychartdata);
 
 	// Incidents by Type
 	var sortField = "created_at";
@@ -137,55 +187,60 @@ function initGraphs(rawData){
 	var labelsField = "created_at_month";
 	var valueField = "";
 	var calculation = "sum";
-	var filter = "a.type == 'Incident' && a.created_at >= '2017-12-01'";
+	var filter = "a.type == 'Incident' && a.created_at >= '" + start.format("YYYY-MM-DD h:mm:ss") + "'  && " + "a.created_at <= '" + end.format("YYYY-MM-DD h:mm:ss") + "'";
 
 	var buildchart = buildChartData(rawData, sortField, seriesField, labelsField, valueField, filter, calculation, sortType);
 	var labellist = buildchart[0];
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowType");
-	var myLineChart = new Chart(ctx, mychartdata);
-	
-	//Data table
-	var jsonData = JSON.stringify(rawData, null, 2);
-	console.log(rawData);
-	var parsedData = rawData;
-	var filter = "a.incident_status != 'Closed'";
-	if (filter != ""){
-		parsedData = filterData(parsedData,filter);
+	if (stage == "update") {
+		typeChart.destroy();
 	};
-	var irflowtable = $('#irflowTable').DataTable( {
-        data: parsedData,
-        columns: [
-        	{
-                "className":      'details-control',
-                "orderable":      false,
-                "data":           null,
-                "defaultContent": ''
-            },
-            { "data": "type" },
-            { "data": "created_at" },
-            { "data": "incident_type" },
-            { "data": "description" }
-        ]
-    } );
+	typeChart = new Chart(ctx, mychartdata);
 	
-	// Add event listener for opening and closing details
-    $('#irflowTable tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = irflowtable.row( tr );
- 
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            // Open this row
-            row.child( formatRowDetail(row.data()) ).show();
-            tr.addClass('shown');
-        }
-    } );
+	if (stage == "new") {
+	//Data table
+		var jsonData = JSON.stringify(rawData, null, 2);
+		//console.log(rawData);
+		var parsedData = rawData;
+		var filter = "a.incident_status != 'Closed'";
+		if (filter != ""){
+			parsedData = filterData(parsedData,filter);
+		};
+		var irflowtable = $('#irflowTable').DataTable( {
+	        data: parsedData,
+	        columns: [
+	        	{
+	                "className":      'details-control',
+	                "orderable":      false,
+	                "data":           null,
+	                "defaultContent": ''
+	            },
+	            { "data": "type" },
+	            { "data": "created_at" },
+	            { "data": "incident_type" },
+	            { "data": "description" }
+	        ]
+	    } );
+		
+		// Add event listener for opening and closing details
+	    $('#irflowTable tbody').on('click', 'td.details-control', function () {
+	        var tr = $(this).closest('tr');
+	        var row = irflowtable.row( tr );
+	 
+	        if ( row.child.isShown() ) {
+	            // This row is already open - close it
+	            row.child.hide();
+	            tr.removeClass('shown');
+	        }
+	        else {
+	            // Open this row
+	            row.child( formatRowDetail(row.data()) ).show();
+	            tr.addClass('shown');
+	        }
+	    } );
+	};
 	
 	//console.log(chartdata);
 	//for debugging
@@ -229,32 +284,19 @@ function testFunction(data){
 	console.log(data);
 };
 
-function getData(queryData, runFunction){
-	$.ajax({
-		url: "/Reports/getData.php",
-		method: "POST",
-		data: {"query": JSON.stringify(queryData)},
-		success: function(data) {
-			//console.log(data);
-			//initGraphs(data);
-			eval(runFunction);
-		},
-		error: function(data) {
-			console.log(data);
-		}
-	});
-};
-
 function initData(){
+	initDatePicker();
 	//IRflow graphs
-	var queryData = {"beginDate": "2017-10-01", "queryName": "irflowGraphs", "system": "irflow"};
-	var runFunction = "initGraphs(data)";
-	getData(queryData, runFunction);
+	var queryData = {"beginDate": start, "endDate": end, "queryName": "irflowGraphs", "system": "irflow"};
+	var runFunction = "initGraphs(data, 'new')";
+	var url = "/Reports/getData.php";
+	getData(queryData, runFunction, url);
 	
 	//IRflow Open Incidents/Alerts
 	var queryData = {"queryName": "irflowOpenTotal", "system": "irflow"}
 	var runFunction = "irflowTotals(data)";
-	getData(queryData, runFunction);
+	var url = "/Reports/getData.php";
+	getData(queryData, runFunction, url);
 };
 
 $(document).ready(
