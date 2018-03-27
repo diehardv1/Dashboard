@@ -46,7 +46,7 @@ left join [csr_dim_malware] on [csr_fct_exact_access].[malware_id] = [csr_dim_ma
 left join [csr_dim_user] on [csr_fct_exact_access].[user_id] = [csr_dim_user].[user_id] 
 left join [csr_dim_log_source] on [csr_fct_exact_access].[log_source_id] = [csr_dim_log_source].[log_source_id] 
 left join [csr_dim_log_source_name] on [csr_dim_log_source].[log_source_name_id] = [csr_dim_log_source_name].[log_source_name_id] 
-where ( [csr_fct_exact_access].[datetime] >= '2018-01-01T16:49:12.566' ) 
+where ( [csr_fct_exact_access].[datetime] >= '2018-03-27T16:49:12.566' ) 
  and ( [csr_dim_user].[user_name] = N'johonnies' )
  order by [csr_fct_exact_access].[datetime] asc";
 //Executes the query
