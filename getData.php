@@ -1,10 +1,5 @@
 <?php
 
-//setting header to json
-header('Content-Type: application/json');
-
-include 'sqlQueries.php';
-
 function mysqlQuery($sql, $server, $user, $mystring, $database) {
     
     //$encode_str = file_get_contents('data/mbitsecirflow01.txt');
@@ -41,22 +36,45 @@ function mysqlQuery($sql, $server, $user, $mystring, $database) {
     print json_encode($data, JSON_PRETTY_PRINT);
 };
 
-function mssqlQuery($sql, $server, $user, $mystring, $database) {
-    $host = 'mmcdb2,64154';
-    $user = 'epodbprod';
-    $pass = 'J$ns8M38hw5';
-    $db_name = 'WRDB';
+//use parameters in query to prevent sql injection. Each ? in query is replaced by parameter
+function mysqlQueryPDO($sql, $server, $user, $mystring, $database, $params) {
+    $charset = 'utf8mb4';
+    $dsn = "mysql:host=$server;dbname=$database;charset=$charset";
+    $opt = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false
+    ];
+    $pdo = new PDO($dsn, $user, $mystring, $opt);
+    //$beginDate = "2018-01-01 00:00:00";
+    //$endDate = "2018-04-01 00:00:00";
+    
+    try {
+        $stmt = $pdo->prepare($sql);
+        $i = 1;
+        foreach ($params as $parameter) {
+            $stmt->bindValue($i, $parameter->field, $parameter->type);
+            $i++;
+        }
+            $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch(PDOException $ex) {
+        die($ex->getMessage());
+    }
+    
+    //now print the data
+    //print_r ($data);
+    print json_encode($data, JSON_PRETTY_PRINT);
+};
+
+//use parameters in query to prevent sql injection. Each ? in query is replaced by parameter
+function mssqlQuery($sql, $server, $user, $mystring, $database, $params) {
     
     $connectionOptions = array( "Database" => $database, "Uid" => $user, "PWD" => $mystring );
     //Establishes the connection
     $conn = sqlsrv_connect($server, $connectionOptions) or die(FormatErrors(sqlsrv_errors()));
-    //Select Query
-    $tsql= 'select * from [dbo].[csr_dim_status]';
     //Executes the query
-    $result= sqlsrv_query($conn, $tsql);
-    
-    // Execute a query
-    //$query = 'select * from [dbo].[csr_dim_status]';
+    $result= sqlsrv_query($conn, $sql, $params);
     
     // Iterate over results<br />
     while($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
@@ -67,23 +85,4 @@ function mssqlQuery($sql, $server, $user, $mystring, $database) {
     sqlsrv_free_stmt($result);
 }
 
-if (isset($_POST["query"])) {
-
-    // Decode our JSON into PHP objects we can use
-    $query = json_decode($_POST["query"]);
-    $system = $query->system;
-    
-    if ( $system == "irflow") {
-        irflow($query);
-    }
-} else {
-    /* $query = new stdClass();
-    $query->beginDate = "2017-10-01";
-    $query->queryName = "irflowGraphs";
-    $query->system = "irflow";
-    irflow($query); */
-    print "Nodata";
-};
-
-//mysqlQuery();
 ?>

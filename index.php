@@ -216,7 +216,7 @@
    <script src="vendor/moment.js/moment.min.js"></script>
    <script src="vendor/daterangepicker/daterangepicker.js"></script>
    <script type="text/javascript" src="js/processData.js"></script>
-   <script type="text/javascript" src="js/getData.js"></script>
+   <script type="text/javascript" src="js/getDataDashboard.js"></script>
 
 </body>
 

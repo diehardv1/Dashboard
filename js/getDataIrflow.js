@@ -1,7 +1,7 @@
 //var start = moment().subtract(29, 'days');
-var start = moment('2017-12-01');
+var start = moment().subtract(3, 'month').startOf('month');
 var end = moment();
-var openedChart;
+//var openedChart;
 
 function cb(start, end) {
     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
@@ -10,7 +10,8 @@ function cb(start, end) {
     //alert("start: " + start + " end: " + end)
     var queryData = {"beginDate": start, "endDate": end, "queryName": "irflowGraphs", "system": "irflow"};
 	var runFunction = "initGraphs(data, 'update')";
-	var url = "/Reports/getData.php";
+	var url = "/Reports/sqlIrflow.php";
+	requestStep = 1;
 	getData(queryData, runFunction, url);
 };
 
@@ -58,13 +59,14 @@ function initGraphs(rawData, stage){
 		        scaleLabel: {
 		        	display: true,
 		        	labelString: 'Count',
-		        	fondSize: 20
+		        	fontSize: 16
 		        },
 		        gridLines: {
 		          display: true
 		        }
 		      }],
-	    },
+			},
+			maintainAspectRatio: false,
 	    legend: {
 	      display: true,
 	      position: 'bottom'
@@ -86,6 +88,7 @@ function initGraphs(rawData, stage){
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowOpen");
+	ctx.height = 200;
 	if (stage == "update") {
 		openedChart.destroy();
 	};
@@ -105,6 +108,7 @@ function initGraphs(rawData, stage){
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowClose");
+	ctx.height = 200;
 	if (stage == "update") {
 		closedChart.destroy();
 	};
@@ -131,13 +135,14 @@ function initGraphs(rawData, stage){
 			        scaleLabel: {
 			        	display: true,
 			        	labelString: 'Days',
-			        	fondSize: 20
+			        	fontSize: 16
 			        },
 			        gridLines: {
 			          display: true
 			        }
 			      }],
-		    },
+				},
+				maintainAspectRatio: false,
 		    legend: {
 		      display: true,
 		      position: 'bottom'
@@ -156,6 +161,7 @@ function initGraphs(rawData, stage){
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options2);
 	var ctx = document.getElementById("irflowCloseAvg");
+	ctx.height = 200;
 	if (stage == "update") {
 		avgcloseChart.destroy();
 	};
@@ -175,6 +181,7 @@ function initGraphs(rawData, stage){
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowPriority");
+	ctx.height = 200;
 	if (stage == "update") {
 		priorityChart.destroy();
 	};
@@ -194,6 +201,7 @@ function initGraphs(rawData, stage){
 	var chartdata = buildchart[1];
 	var mychartdata = barChart(labellist, chartdata, options);
 	var ctx = document.getElementById("irflowType");
+	ctx.height = 200;
 	if (stage == "update") {
 		typeChart.destroy();
 	};
@@ -289,13 +297,15 @@ function initData(){
 	//IRflow graphs
 	var queryData = {"beginDate": start, "endDate": end, "queryName": "irflowGraphs", "system": "irflow"};
 	var runFunction = "initGraphs(data, 'new')";
-	var url = "/Reports/getData.php";
+	var url = "/Reports/sqlIrflow.php";
+	requestStep = 1;
 	getData(queryData, runFunction, url);
 	
 	//IRflow Open Incidents/Alerts
 	var queryData = {"queryName": "irflowOpenTotal", "system": "irflow"}
 	var runFunction = "irflowTotals(data)";
-	var url = "/Reports/getData.php";
+	var url = "/Reports/sqlIrflow.php";
+	requestStep ++;
 	getData(queryData, runFunction, url);
 };
 

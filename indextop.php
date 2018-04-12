@@ -80,7 +80,7 @@
                                     <a href="irflow.php">Incident Response</a>
                                 </li>
                                 <li>
-                                    <a href="morris.html">Web Gateway</a>
+                                    <a href="mwg.php">Web Gateway</a>
                                 </li>
                                 <li>
                                     <a href="morris.html">ProofPoint</a>

@@ -2,17 +2,26 @@ Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSyste
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
 function getData(queryData, runFunction, url){
+	$("#wait").css("display", "block");
 	$.ajax({
 		url: url,
 		method: "POST",
 		data: {"query": JSON.stringify(queryData)},
 		success: function(data) {
 			//console.log(data);
-			//initGraphs(data);
 			eval(runFunction);
+			requestStep--;
+			if (requestStep == 0) {
+				$("#wait").css("display", "none");
+			}
+			
 		},
 		error: function(data) {
 			console.log(data);
+			requestStep--;
+			if (requestStep == 0) {
+				$("#wait").css("display", "none");
+			}
 		}
 	});
 };
@@ -112,7 +121,7 @@ function buildChartData(rawData, sortField, seriesField, labelsField, valueField
 			found = false;
 		};
 	};
-	//console.log(chartdata)
+	//console.log(labellist)
 	//var numbers = [1, 2, 3, 4];
 	//Math.max(...numbers) // 4
 	//Math.min(...numbers) // 1
@@ -248,12 +257,10 @@ function lineChart(labellist, chartdata, options) {
 			      label: chartdata[i].name,
 			      backgroundColor: barcolors[i],
 			      borderColor: barcolors[i],
-			      pointRadius: 5,
-			      pointBackgroundColor: "rgba(2,117,216,1)",
-			      pointBorderColor: "rgba(255,255,255,0.8)",
-			      pointHoverRadius: 5,
+			      pointRadius: 2,
+			      pointHoverRadius: 2,
 			      pointHoverBackgroundColor: "rgba(2,117,216,1)",
-			      pointHitRadius: 20,
+			      pointHitRadius: 3,
 			      pointBorderWidth: 2,
 			      fill: false,
 			      data: chartdata[i].values

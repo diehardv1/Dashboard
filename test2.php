@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 $host = 'mmcdb2,64154';
 $user = 'epodbprod';
-$pass = 'J$ns8M38hw5';
+$pass = 'RUmyoSDMEBIe4EaE';
 $db_name = 'WRDB';
 ini_set('max_execution_time', 0);
 
