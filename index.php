@@ -1,15 +1,18 @@
 <?php include 'indextop.php';?>
-
-        <div id="page-wrapper">
+        <div id="wait" style="display:none;width:69px;height:89px;border:none;position:absolute;top:40%;left:40%;padding:2px;z-index: 1;">
+            <img src='wait.gif' width="44" height="44" />
+            <br>Loading..
+        </div>
+        <div id="page-wrapper" style="font-size:.85em;">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Dashboard</h1>
+                    <h3>Incident Response/Change Gear</h3>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
@@ -37,7 +40,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
@@ -65,18 +68,11 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                	<br><br><br><br><br>
-					<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-    					<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-    					<span></span> <b class="caret"></b>
-					</div>
-				</div>
             </div>
             <!-- /.row -->
             
             <div class="row" id="irflowtableID" style="display: none">
-                <div class="col-lg-9">
+                <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> Data Listing
@@ -104,7 +100,18 @@
             <!-- /.row -->
            
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-4">
+                	<br>
+					<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+    					<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+    					<span></span> <b class="caret"></b>
+					</div>
+				</div>
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> Incidents/Alerts Opened
@@ -119,7 +126,7 @@
                     <!-- /.panel -->
                 </div>
                 <!-- /.col-lg-6 -->
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> Incidents/Alerts Closed
@@ -134,7 +141,7 @@
                     <!-- /.panel -->
                 </div>
                 <!-- /.col-lg-4 -->
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> Average Time to Close
@@ -152,8 +159,8 @@
             </div>
             <!-- /.row -->
             
-            <div class="row">
-                <div class="col-lg-3">
+            <div class="row row-eq-height">
+                <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> Incidents by Priority
@@ -168,7 +175,7 @@
                     <!-- /.panel -->
                 </div>
                 
-                <div class="col-lg-6">
+                <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> Incidents by Type
@@ -176,7 +183,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <canvas id="irflowType" height="70"></canvas>
+                            <canvas id="irflowType"></canvas>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -188,7 +195,6 @@
              
         </div>
         <!-- /#page-wrapper -->
-        
 
     </div>
     <!-- /#wrapper -->
@@ -216,7 +222,7 @@
    <script src="vendor/moment.js/moment.min.js"></script>
    <script src="vendor/daterangepicker/daterangepicker.js"></script>
    <script type="text/javascript" src="js/processData.js"></script>
-   <script type="text/javascript" src="js/getDataDashboard.js"></script>
+   <script type="text/javascript" src="js/getDataIrflow.js"></script>
 
 </body>
 
