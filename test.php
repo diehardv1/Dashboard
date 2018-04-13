@@ -1,6 +1,6 @@
 <?php 
 $serverName = "mmcdb2,64154"; 
-$connectionOptions = array( "Database" => "WRDB", "Uid" => "epodbprod", "PWD" => "J\$ns8M38hw5" ); 
+$connectionOptions = array( "Database" => "WRDB", "Uid" => "epodbprod", "PWD" => "RUmyoSDMEBIe4EaE" ); 
 //Establishes the connection 
 $conn = sqlsrv_connect($serverName, $connectionOptions) or die(FormatErrors(sqlsrv_errors())); 
 //Select Query 
