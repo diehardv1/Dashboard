@@ -60,16 +60,23 @@
             </div>
             <!-- /.navbar-header -->
 
-            <ul class="nav navbar-top-links navbar-right">
+            <ul class="nav navbar-brand navbar-right" style="font-size:.85em;">
+            Refresh time: <select id="refreshtime" class="selectpicker" data-style="btn-info" onchange="refreshSelect()">
+                <option value="1">1 Minute</option>
+                <option value="10">10 Minutes</option>
+                <option value="30">30 Minutes</option>
+                <option value="off" selected>Off</option>
+            </select>
+
             </ul>
             <!-- /.navbar-top-links -->
 
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                    	<li>
+                    	<!-- <li>
                     		<a href="#"><i class="fa fa-list-alt fa-fw"></i>  Menu</a>
-                    	</li>
+                    	</li> -->
                         <li>
                             <a href="index.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>

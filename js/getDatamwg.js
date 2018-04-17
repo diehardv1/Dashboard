@@ -3,6 +3,27 @@ var start = moment().subtract(3, 'hours');
 var end = moment();
 var timeDiff = end.diff(start, 'minutes');
 
+function refreshSelect() {
+	var x = document.getElementById("refreshtime").value;
+	if (x == "1") {
+		window.reloadtime = setInterval(dataRefresh, 60000);
+	};
+	if (x == "10") {
+		window.reloadtime = setInterval(dataRefresh, 600000);
+	};
+	if (x == "30") {
+		window.reloadtime = setInterval(dataRefresh, 1800000);
+	};
+	if (x == "off") {
+		clearInterval(window.reloadtime);
+	};
+}
+
+function dataRefresh() {
+	cb(moment().subtract(3, 'hours'), moment());
+	console.log("refreshing...");
+}
+
 function cb(start, end) {
     $('#reportrange span').html(start.format('MM/DD/YYYY h:mm A') + ' - ' + end.format('MM/DD/YYYY h:mm A'));
     window.start = start;
@@ -62,7 +83,6 @@ function initGraphs(rawData, stage){
 	} else {
 		var timeUnit = "day";
 	}
-	console.log(timeUnit);
 
 	var options = {
 	    scales: {
@@ -221,6 +241,7 @@ function initData(){
 	var url = "/Reports/sqlmwg.php";
 	requestStep = 1;
 	getData(queryData, runFunction, url);
+	//window.reloadtime = setInterval(dataRefresh, 600000); //default 10 minutes
 };
 
 $(document).ready(
